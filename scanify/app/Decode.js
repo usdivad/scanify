@@ -60,11 +60,13 @@ var takePicture = document.querySelector("#Take-Picture"),
                                 fileReader.onload = function (event) {
                                     showPicture.src = event.target.result;
                                     $("#picture").attr("src", fileReader.result);
-                                    $("#picture").Jcrop();
+                                    $("#picture").Jcrop({
+                                        onSelect: getCoords
+                                    });
                                     console.log("asdf");
                                 };
                                 fileReader.readAsDataURL(file);
-                                DecodeBar()
+                                //DecodeBar()
                             }
                             catch (e) {
                                 Result.innerHTML = "Neither createObjectURL or FileReader are supported";
@@ -72,6 +74,9 @@ var takePicture = document.querySelector("#Take-Picture"),
                         }
                     // }
                 };
+            }
+            function getCoords(c) {
+                console.log([c.x, c.y, c.x2, c.y2, c.w, c.h].join(", "));
             }
             function DecodeBar(){
                 showPicture.onload = function(){
