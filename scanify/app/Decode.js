@@ -10,7 +10,14 @@ var takePicture = document.querySelector("#Take-Picture"),
             ctx = Canvas.getContext("2d");
             var workerCount = 0;
 
-            var crop_dimensions = {};
+            var crop_dimensions = {
+                x:0,
+                y:0,
+                x2:640,
+                y2:480,
+                w:640,
+                h:480
+            };
 
             function receiveMessage(e) {
                 if(e.data.success === "log") {
@@ -22,8 +29,8 @@ var takePicture = document.querySelector("#Take-Picture"),
                     if(workerCount) {
                         if(resultArray.length == 0) {
                             //DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, Width: Canvas.width, Height: Canvas.height, cmd: "flip"});
-                            DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height,crop_dimensions.x,crop_dimensions.y,crop_dimensions.w,crop_dimensions.h).data, Width: Canvas.width, Height: Canvas.height, cmd: "flip"});
-                            //DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,crop_dimensions.w,crop_dimensions.h).data, Width: crop_dimensions.w, Height: crop_dimensions.h, cmd: "flip"});
+                            //DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height,crop_dimensions.x,crop_dimensions.y,crop_dimensions.w,crop_dimensions.h).data, Width: Canvas.width, Height: Canvas.height, cmd: "flip"});
+                            DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,crop_dimensions.w,crop_dimensions.h).data, Width: crop_dimensions.w, Height: crop_dimensions.h, cmd: "flip"});
                         } else {
                             workerCount--;
                         }
@@ -65,7 +72,9 @@ var takePicture = document.querySelector("#Take-Picture"),
                                 fileReader.onload = function (event) {
                                     //showPicture.src = event.target.result;
                                     $("#picture").attr("src", fileReader.result);
-                                    $("#picture").Jcrop({
+                                    $("#cropped_picture").attr("src", fileReader.result);
+
+                                    $("#cropped_picture").Jcrop({
                                         onSelect: getCoords
                                     });
                                     console.log("asdf");
@@ -76,7 +85,7 @@ var takePicture = document.querySelector("#Take-Picture"),
                                     console.log("click");
                                     DecodeBar(crop_dimensions);
                                 })
-                                //DecodeBar()
+                                //DecodeBar(crop_dimensions);
                             }
                             catch (e) {
                                 Result.innerHTML = "Neither createObjectURL or FileReader are supported";
@@ -92,14 +101,14 @@ var takePicture = document.querySelector("#Take-Picture"),
             function DecodeBar(c){
                 // showPicture.onload = function(){
                     console.log("decode");
-                    //ctx.drawImage(showPicture,0,0,Canvas.width,Canvas.height);
-                    ctx.drawImage(showPicture, 0,0,Canvas.width,Canvas.height,c.x,c.y,c.w,c.h);
+                    ctx.drawImage(showPicture,0,0,Canvas.width,Canvas.height);
+                    //ctx.drawImage(showPicture,0,0,Canvas.width,Canvas.height,c.x,c.y,c.w,c.h);
                     resultArray = [];
                     workerCount = 2;
                     Result.innerHTML="";
                     //console.log(c.x);
                     //DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, Width: Canvas.width, Height: Canvas.height, cmd: "normal"});
-                    DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height,c.x,c.y,c.w,c.h).data, Width: Canvas.width, Height: Canvas.height, cmd: "normal"});
+                    DecodeWorker.postMessage({ImageData: ctx.getImageData(c.x,c.y,c.w,c.h).data, Width: c.w, Height: c.h, cmd: "normal"});
                 // }
             }
 }
