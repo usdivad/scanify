@@ -9,6 +9,9 @@ var takePicture = document.querySelector("#Take-Picture"),
             var resultArray = [];
             ctx = Canvas.getContext("2d");
             var workerCount = 0;
+
+            var crop_dimensions = {};
+
             function receiveMessage(e) {
                 if(e.data.success === "log") {
                     console.log(e.data.result);
@@ -18,7 +21,9 @@ var takePicture = document.querySelector("#Take-Picture"),
                     workerCount--;
                     if(workerCount) {
                         if(resultArray.length == 0) {
-                            DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, Width: Canvas.width, Height: Canvas.height, cmd: "flip"});
+                            //DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, Width: Canvas.width, Height: Canvas.height, cmd: "flip"});
+                            DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height,crop_dimensions.x,crop_dimensions.y,crop_dimensions.w,crop_dimensions.h).data, Width: Canvas.width, Height: Canvas.height, cmd: "flip"});
+                            //DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,crop_dimensions.w,crop_dimensions.h).data, Width: crop_dimensions.w, Height: crop_dimensions.h, cmd: "flip"});
                         } else {
                             workerCount--;
                         }
@@ -58,7 +63,7 @@ var takePicture = document.querySelector("#Take-Picture"),
                             try {
                                 var fileReader = new FileReader();
                                 fileReader.onload = function (event) {
-                                    showPicture.src = event.target.result;
+                                    //showPicture.src = event.target.result;
                                     $("#picture").attr("src", fileReader.result);
                                     $("#picture").Jcrop({
                                         onSelect: getCoords
@@ -66,6 +71,11 @@ var takePicture = document.querySelector("#Take-Picture"),
                                     console.log("asdf");
                                 };
                                 fileReader.readAsDataURL(file);
+
+                                $("#crop").on("click", function() {
+                                    console.log("click");
+                                    DecodeBar(crop_dimensions);
+                                })
                                 //DecodeBar()
                             }
                             catch (e) {
@@ -76,16 +86,20 @@ var takePicture = document.querySelector("#Take-Picture"),
                 };
             }
             function getCoords(c) {
+                crop_dimensions = c;
                 console.log([c.x, c.y, c.x2, c.y2, c.w, c.h].join(", "));
             }
-            function DecodeBar(){
-                showPicture.onload = function(){
-                    ctx.drawImage(showPicture,0,0,Canvas.width,Canvas.height);
+            function DecodeBar(c){
+                // showPicture.onload = function(){
+                    console.log("decode");
+                    //ctx.drawImage(showPicture,0,0,Canvas.width,Canvas.height);
+                    ctx.drawImage(showPicture, 0,0,Canvas.width,Canvas.height,c.x,c.y,c.w,c.h);
                     resultArray = [];
                     workerCount = 2;
                     Result.innerHTML="";
-                    DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, Width: Canvas.width, Height: Canvas.height, cmd: "normal"});
-                    //$("#picture").Jcrop();
-                }
+                    //console.log(c.x);
+                    //DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height).data, Width: Canvas.width, Height: Canvas.height, cmd: "normal"});
+                    DecodeWorker.postMessage({ImageData: ctx.getImageData(0,0,Canvas.width,Canvas.height,c.x,c.y,c.w,c.h).data, Width: Canvas.width, Height: Canvas.height, cmd: "normal"});
+                // }
             }
 }
