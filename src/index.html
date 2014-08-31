@@ -11,6 +11,7 @@
 			<input id="Take-Picture" type="file" accept="image/*;capture=camera" />
 			<p id="textbit"></p>
 		</div>
+		<script src="lib/jquery-1.11.1.min.js"></script>
 		<script type="text/javascript">
 			var takePicture = document.querySelector("#Take-Picture"),
 			showPicture = document.querySelector("#picture");
@@ -50,7 +51,7 @@
 					}
 				}
 			}
-			var DecodeWorker = new Worker("DecoderWorker.js");
+			var DecodeWorker = new Worker("lib/DecoderWorker.js");
 			DecodeWorker.onmessage = receiveMessage;
 			if(takePicture && showPicture) {
 				takePicture.onchange = function (event) {
