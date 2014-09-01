@@ -37,6 +37,7 @@ function getInfo(barcode) {
     // };
     // xmlhttp.send();
 
+    //$("#textbit").html($("#textbit").html() + "<br>retrieving product data...");
     console.log("ajax going");
     $.ajax({
         url: "app/getJSON.php",
@@ -61,7 +62,7 @@ function getInfo(barcode) {
             //display
             var textbit = $("#textbit");
             var original_html = textbit.html();
-            textbit.html(original_html + "<br>name: " + name + "<br>category: " + category);
+            textbit.html(original_html + "<br><br><u>product data</u>:<br>name: " + name + "<br>category: " + category);
         }
     });
 

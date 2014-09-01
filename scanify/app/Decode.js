@@ -73,6 +73,7 @@ var takePicture = document.querySelector("#Take-Picture"),
                                 fileReader.onload = function (event) {
                                     //showPicture.src = event.target.result;
                                     $("#picture").attr("src", fileReader.result);
+                                    //$("#picture").attr("style", "display:none");
                                     $("#cropped_picture").attr("src", fileReader.result);
 
                                     $("#cropped_picture").Jcrop({
