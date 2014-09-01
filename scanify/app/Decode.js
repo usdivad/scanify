@@ -112,4 +112,4 @@ var takePicture = document.querySelector("#Take-Picture"),
                     DecodeWorker.postMessage({ImageData: ctx.getImageData(c.x,c.y,c.w,c.h).data, Width: c.w, Height: c.h, cmd: "normal"});
                 // }
             }
-}
+} //end decoder
