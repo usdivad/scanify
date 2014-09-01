@@ -44,6 +44,7 @@ var takePicture = document.querySelector("#Take-Picture"),
                         }
                     }
                     Result.innerHTML=resultArray.join("<br />");
+                    Sender(Result.innerHTML);
                 }else{
                     if(resultArray.length === 0 && workerCount === 0) {
                         Result.innerHTML="Decoding failed.";
