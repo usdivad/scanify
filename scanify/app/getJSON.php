@@ -4,8 +4,8 @@
     header('Access-Control-Allow-Methods: POST');
 
     $url = $_POST['url'];
-    //$json = file_get_contents($url);
-    //header('Content-Type: application/json');
-    echo $url;
-    //echo $json;
+    $json = file_get_contents($url);
+    header('Content-Type: application/json');
+    //echo $url;
+    echo $json;
 ?>
