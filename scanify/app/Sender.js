@@ -1,7 +1,7 @@
 function Sender(s) {
 
 var UPC_MIN = 8;
-var UPC_URL = "http://www.upcdatabase.com/item/";
+var UPC_URL = "https://api.scandit.com/v2/products/";
 var bar;
 var bar_arr = s.match(/\d+/g);
 for (var i=0; i<bar_arr.length; i++) {
@@ -18,10 +18,11 @@ if (bar) {
 function getInfo(barcode) {
     //console.log(barcode);
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", UPC_URL + barcode);
+    xmlhttp.open("GET", UPC_URL + barcode + "?key=xnMIfjHmEeSOm5BR8AMNKMhAmYmlilxv5GlU7pBAVbY");
     
     xmlhttp.onreadystatechange = function() {
         //get the text from page
+        console.log(xmlhttp.responseText);
     };
 
     xmlhttp.send();
